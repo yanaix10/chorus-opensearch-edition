@@ -28,6 +28,7 @@ export default function Sidebar() {
       <div>
         <h3 className="font-bold text-sm mb-2 text-gray-800">Pick your Algo</h3>
         <select
+		  aria-label="Pick your Algo"
           value={selectedAlgo}
           onChange={(e) => setSelectedAlgo(e.target.value)}
           className="w-full border border-gray-300 p-1 text-sm rounded bg-white focus:outline-none focus:border-blue-500"
@@ -46,7 +47,7 @@ export default function Sidebar() {
             <h4 className="text-xs font-semibold text-gray-600">
               Select Configuration:
             </h4>
-            <select className="border border-gray-300 rounded p-1 text-sm bg-white w-full focus:outline-none focus:border-blue-500">
+            <select aria-label="Select Configuration" className="border border-gray-300 rounded p-1 text-sm bg-white w-full focus:outline-none focus:border-blue-500">
               <option value="">-- Select a configuration --</option>
               <option value="art_controlled">art_controlled</option>
               <option value="baseline">baseline</option>
