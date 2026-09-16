@@ -189,7 +189,7 @@ class App extends Component {
       onError={this.handleSearchError}
     >
       <div style={{ height: "200px", width: "100%"}}>
-        <img style={{ height: "100%" }} className="center" src={chorusLogo} alt="Chorus Logo" />
+        <img style={{ height: "100%" , display:"block" , margin:"0 auto" }} className="center" src={chorusLogo} alt="Chorus Logo" />
         <div style={{float:"right"}}>
           <small>
             <code>Your Client ID: {client_id}</code>
