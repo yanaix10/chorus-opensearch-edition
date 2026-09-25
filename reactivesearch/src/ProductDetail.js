@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { addToCart } from './App';
 import ShoppingCartButton from './custom/ShoppingCartButton';
 import chorusLogo from './assets/chorus-logo.png';
-
+import { search_server } from './App';
 export default function ProductDetail() {
   const { asin } = useParams();
   const [product, setProduct] = useState(null);
@@ -13,10 +13,11 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch("http://localhost:9090/ecommerce/_search", {
+        const response = await fetch(`${search_server}/ecommerce/_search`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+			_source: { excludes: ["cost"] },
             query: { match: { asin: asin } },
             size: 1
           })
@@ -63,9 +64,9 @@ export default function ProductDetail() {
         
         <div style={{ flex: "1" }}>
           <div style={{ color: "#007185", fontWeight: "bold", marginBottom: "10px" }}>
-            {product.Brand} | {product.category}
+            {product.brand} | {product.category}
           </div>
-          <h1 style={{ margin: "0 0 10px 0", fontSize: "24px" }} dangerouslySetInnerHTML={{ __html: product.title }} />
+          <h1 style={{ margin: "0 0 10px 0", fontSize: "24px" }}>{product.title}</h1>
           
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
             <span style={{ fontSize: "20px", color: "#FFA41C" }}>
@@ -83,16 +84,16 @@ export default function ProductDetail() {
               backgroundColor: "#FFD814", borderColor: "#FCD200", borderRadius: "100px", 
               padding: "10px 20px", cursor: "pointer", fontSize: "16px", marginBottom: "40px" 
             }}
-            onClick={() => addToCart({ ...product, id: product.id, asin: product.asin })}
+            onClick={() => addToCart({ ...product, id: product.id || product.asin , asin: product.asin })}
           >
             Add to Cart 
           </button>
 
-          {product.bullets && (
+          {product.bullet_points && (
             <div>
               <h3>About this item</h3>
               <ul style={{ lineHeight: "1.6" }}>
-                {product.bullets.split('\n').map((bullet, i) => bullet.trim() && <li key={i}>{bullet}</li>)}
+                {product.bullet_points.split('\n').map((bullet, i) => bullet.trim() && <li key={i}>{bullet}</li>)}
               </ul>
             </div>
           )}

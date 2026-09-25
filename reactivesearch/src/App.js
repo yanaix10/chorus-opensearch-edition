@@ -19,7 +19,7 @@ import chorusLogo from './assets/chorus-logo.png';
 const event_server = "http://localhost:9090"; // Middleware
 //const event_server = "http://localhost:2021"; // DataPrepper
 //const search_server = "http://localhost:9200"; // OpenSearch
-const search_server = "http://localhost:9090"; // Send all queries through Middleware
+export const search_server = "http://localhost:9090"; // Send all queries through Middleware
 
 const APPLICATION = "Chorus";
 const client_id = ((sessionStorage.hasOwnProperty('client_id')) ?
@@ -46,7 +46,7 @@ export function addToCart(item) {
   }
   if (getQueryId()) {
 
-    const ordinalPos = item.position !== undefined ? item.position : 0;
+    const ordinalPos = item.position !== undefined ? item.position : -1;
     // Now track the add_to_cart conversion event.
     var event = new UbiEvent(APPLICATION, 'add_to_cart', client_id, session_id, getQueryId(), 
       new UbiEventAttributes('asin', item.asin, item.title, {search_config: item.algo}, {ordinal: ordinalPos}),
@@ -569,12 +569,18 @@ class SearchPage extends Component {
                 <ReactiveList.ResultCardsWrapper>
                   {data.map((item, index) => (
                   <ResultCard key={item._id}>
-                    <ResultCard.Image
-                      style={{
-                        backgroundSize: "cover",
-                        backgroundImage: `url(${item.image})`
-                      }}
-                    />
+                    <Link 
+     					to={`/product/${item.asin}`}
+      					onClick={() => trackClick({...item, algo: item.search_config}, index)}
+						style={{ display: "contents" }}
+					>
+      					<ResultCard.Image
+        						style={{
+          							backgroundSize: "cover",
+          							backgroundImage: `url(${item.image})`
+        						}}
+     					/>
+  					</Link>
                     <ResultCard.Title>
   						<Link 
 							to={`/product/${item.asin}`}
@@ -590,7 +596,7 @@ class SearchPage extends Component {
                       {item.search_config ?" algo:" + item.search_config : ""}
                     </ResultCard.Description>
                     <button 
-                      style={{ fontSize:"14px", position:"relative" }}       
+                      style={{ fontSize:"14px", position:"relative",zIndex: 2}}       
                       ref={this.handleRef}   
                       position={ index }
                       asin={ item.asin || "" }
